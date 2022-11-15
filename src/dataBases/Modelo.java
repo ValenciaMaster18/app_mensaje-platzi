@@ -1,9 +1,9 @@
-package modelo;
+package dataBases;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import javax.swing.JOptionPane;
 
 public class Modelo {
 
@@ -28,9 +28,8 @@ public class Modelo {
             try {
                 Class.forName(DRIVER);
                 conexionMysql = (Connection) DriverManager.getConnection(URL + BD, USER, PASSWORD);
-                JOptionPane.showMessageDialog(null, "Conexion exitosa");
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Conexion cancelada " + e);
+                System.out.println("Conexion cancelada " + e);
             }
         }
         return conexionMysql;
@@ -39,10 +38,19 @@ public class Modelo {
     public void CerrarBD() throws SQLException {
         if (conexionMysql != null) {
             conexionMysql.close();
-            JOptionPane.showMessageDialog(null, "Conexion Cerraada");
+            System.out.println("Conexion cerrada");
         }
     }
-
+    //Limpiar base de datos
+    private void vaciarBD(){
+        String sql = "TRUNCATE mensajes";
+        try {
+            PreparedStatement ps = conexionMysql.prepareStatement(sql);
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+    }
     //Get
     public String getBD() {
         return BD;
